@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service-nodeport
+  labels:
+    app: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+  - protocol: TCP
+    port: 3001
+    targetPort: 3001
+    nodePort: 30001
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service-nodeport
+  labels:
+    app: product-service
+spec:
+  selector:
+    app: product-service
+  ports:
+  - protocol: TCP
+    port: 3002
+    targetPort: 3002
+    nodePort: 30002
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service-nodeport
+  labels:
+    app: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+  - protocol: TCP
+    port: 3003
+    targetPort: 3003
+    nodePort: 30003
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service-nodeport
+  labels:
+    app: notification-service
+spec:
+  selector:
+    app: notification-service
+  ports:
+  - protocol: TCP
+    port: 3004
+    targetPort: 3004
+    nodePort: 30004
+  type: NodePort
