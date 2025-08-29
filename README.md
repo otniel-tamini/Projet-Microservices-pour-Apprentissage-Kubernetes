@@ -1,6 +1,6 @@
-# 🚀 Projet Microservices pour Apprentissage Kubernetes
+# 🚀 Microservices Project for Kubernetes Learning
 
-Ce projet contient 4 microservices prêts pour le déploiement sur Kubernetes. Il est conçu pour apprendre les concepts de base de Kubernetes à travers un exemple pratique.
+This project contains 4 microservices ready for Kubernetes deployment. It's designed to learn basic Kubernetes concepts through a practical example.
 
 ## 📋 Architecture
 
@@ -15,38 +15,38 @@ Ce projet contient 4 microservices prêts pour le déploiement sur Kubernetes. I
 ### Services
 
 1. **User Service** (Node.js/Express)
-   - Gestion des utilisateurs
-   - CRUD complet
+   - User management
+   - Full CRUD operations
    - Port: 3001
 
 2. **Product Service** (Python/Flask)
-   - Catalogue des produits
-   - Gestion du stock
+   - Product catalog
+   - Stock management
    - Port: 3002
 
 3. **Order Service** (Node.js/Express)
-   - Gestion des commandes
-   - Communication avec User et Product Services
+   - Order management
+   - Communicates with User and Product Services
    - Port: 3003
 
 4. **Notification Service** (Python/FastAPI)
-   - Système de notifications
-   - API documentation automatique
+   - Notification system
+   - Automatic API documentation
    - Port: 3004
 
-## 🛠️ Prérequis
+## 🛠️ Prerequisites
 
-- **Docker Desktop** installé et démarré
-- **Kubernetes** activé dans Docker Desktop
-- **kubectl** configuré
-- **VS Code** avec l'extension Kubernetes
-- **Node.js** et **Python** (pour le développement local)
+- **Docker Desktop** installed and running
+- **Kubernetes** enabled in Docker Desktop
+- **kubectl** configured
+- **VS Code** with Kubernetes extension
+- **Node.js** and **Python** (for local development)
 
-## 🚀 Déploiement Manuel sur Kubernetes
+## 🚀 Manual Deployment on Kubernetes
 
-### Étape 1: Construction des Images Docker
+### Step 1: Building Docker Images
 
-Construisez chaque service individuellement pour mieux comprendre le processus :
+Build each service individually to better understand the process:
 
 ```powershell
 # User Service (Node.js)
@@ -70,36 +70,36 @@ docker build -t notification-service:latest .
 cd ..\..
 ```
 
-Vérifiez que toutes les images sont créées :
+Verify all images are created:
 ```powershell
 docker images | Select-String "user-service|product-service|order-service|notification-service"
 ```
 
-### Étape 2: Créer le Namespace (Optionnel)
+### Step 2: Create Namespace (Optional)
 
 ```powershell
-# Créer un namespace dédié pour isoler les ressources
+# Create a dedicated namespace to isolate resources
 kubectl apply -f k8s\namespace.yaml
 
-# Vérifier la création
+# Verify creation
 kubectl get namespaces
 ```
 
-### Étape 3: Déployer les Services un par un
+### Step 3: Deploy Services One by One
 
-Déployez chaque service séparément pour observer le processus :
+Deploy each service separately to observe the process:
 
 ```powershell
 # 1. User Service
 kubectl apply -f k8s\user-service.yaml
 kubectl get pods -l app=user-service -w
-# Attendez que les pods soient "Running" avant de continuer
+# Wait for pods to be "Running" before continuing
 
 # 2. Product Service  
 kubectl apply -f k8s\product-service.yaml
 kubectl get pods -l app=product-service -w
 
-# 3. Order Service (dépend des services précédents)
+# 3. Order Service (depends on previous services)
 kubectl apply -f k8s\order-service.yaml
 kubectl get pods -l app=order-service -w
 
@@ -108,40 +108,40 @@ kubectl apply -f k8s\notification-service.yaml
 kubectl get pods -l app=notification-service -w
 ```
 
-### Étape 4: Exposer les Services avec LoadBalancer
+### Step 4: Expose Services with LoadBalancer
 
 ```powershell
-# Exposer tous les services pour accès externe
+# Expose all services for external access
 kubectl apply -f k8s\loadbalancer-services.yaml
 
-# Vérifier l'attribution des IPs externes
+# Verify external IP assignment
 kubectl get services | Select-String "loadbalancer"
 ```
 
-### Étape 5: Vérification du Déploiement
+### Step 5: Deployment Verification
 
 ```powershell
-# Voir l'état global
+# View global state
 kubectl get pods,services
 
-# Vérifier les logs de chaque service
+# Check logs for each service
 kubectl logs -l app=user-service --tail=10
 kubectl logs -l app=product-service --tail=10  
 kubectl logs -l app=order-service --tail=10
 kubectl logs -l app=notification-service --tail=10
 
-# Tester la connectivité
+# Test connectivity
 Invoke-WebRequest -Uri "http://localhost:3001/health" -UseBasicParsing
 Invoke-WebRequest -Uri "http://localhost:3002/health" -UseBasicParsing
 Invoke-WebRequest -Uri "http://localhost:3003/health" -UseBasicParsing
 Invoke-WebRequest -Uri "http://localhost:3004/health" -UseBasicParsing
 ```
 
-## 🌐 Options d'Exposition des Services
+## 🌐 Service Exposure Options
 
-### Option 1: LoadBalancer (Recommandé avec Docker Desktop)
+### Option 1: LoadBalancer (Recommended with Docker Desktop)
 
-Les services sont exposés de manière permanente via localhost :
+Services are permanently exposed via localhost:
 
 - **User Service**: <http://localhost:3001>
 - **Product Service**: <http://localhost:3002>
@@ -149,68 +149,68 @@ Les services sont exposés de manière permanente via localhost :
 - **Notification Service**: <http://localhost:3004>
 - **API Documentation**: <http://localhost:3004/docs>
 
-### Option 2: NodePort (Ports spécifiques)
+### Option 2: NodePort (Specific Ports)
 
-Pour utiliser les services NodePort avec des ports différents :
+To use NodePort services with different ports:
 
 ```powershell
 kubectl apply -f k8s\nodeport-services.yaml
 ```
 
-Accès via :
+Access via:
 - User Service: <http://localhost:30001>
 - Product Service: <http://localhost:30002>
 - Order Service: <http://localhost:30003>
 - Notification Service: <http://localhost:30004>
 
-### Option 3: Port-Forward (Développement)
+### Option 3: Port-Forward (Development)
 
-Pour un accès temporaire pendant le développement :
+For temporary access during development:
 
 ```powershell
-# Dans des terminaux séparés
+# In separate terminals
 kubectl port-forward service/user-service 3001:3001
 kubectl port-forward service/product-service 3002:3002
 kubectl port-forward service/order-service 3003:3003
 kubectl port-forward service/notification-service 3004:3004
 ```
 
-**Scripts automatisés disponibles :**
-- `.\start-port-forwards.ps1` - Démarrer tous les port-forwards
-- `.\stop-port-forwards.ps1` - Arrêter tous les port-forwards
+**Automated scripts available:**
+- `.\start-port-forwards.ps1` - Start all port-forwards
+- `.\stop-port-forwards.ps1` - Stop all port-forwards
 
-## 📋 Commandes de Gestion Utiles
+## 📋 Useful Management Commands
 
-### Surveillance en Temps Réel
+### Real-time Monitoring
 
 ```powershell
-# Surveiller les pods
+# Monitor pods
 kubectl get pods -w
 
-# Surveiller les services  
+# Monitor services  
 kubectl get services -w
 
-# Logs en temps réel
+# Real-time logs
 kubectl logs -f -l app=user-service
 ```
 
-### Mise à l'Échelle
+### Scaling
 
 ```powershell
-# Augmenter le nombre de répliques
+# Increase number of replicas
 kubectl scale deployment user-service --replicas=3
 
-# Vérifier la mise à l'échelle
+# Verify scaling
 kubectl get pods -l app=user-service
 ```
 
-### Redémarrage
+### Restart
 
 ```powershell
-# Redémarrer un déploiement
+# Restart a deployment
 kubectl rollout restart deployment/user-service
 
-# Voir l'historique des déploiements
+# View deployment history
 kubectl rollout history deployment/user-service
 ```
 
@@ -218,119 +218,119 @@ kubectl rollout history deployment/user-service
 
 #### User Service
 - `GET /health` - Health check
-- `GET /users` - Liste des utilisateurs
-- `POST /users` - Créer un utilisateur
-- `GET /users/:id` - Détails d'un utilisateur
+- `GET /users` - List users
+- `POST /users` - Create user
+- `GET /users/:id` - User details
 
 #### Product Service
 - `GET /health` - Health check
-- `GET /products` - Liste des produits
-- `POST /products` - Créer un produit
-- `GET /products/:id` - Détails d'un produit
+- `GET /products` - List products
+- `POST /products` - Create product
+- `GET /products/:id` - Product details
 
 #### Order Service
 - `GET /health` - Health check
-- `GET /orders` - Liste des commandes
-- `POST /orders` - Créer une commande
-- `PUT /orders/:id/status` - Mettre à jour le statut
+- `GET /orders` - List orders
+- `POST /orders` - Create order
+- `PUT /orders/:id/status` - Update status
 
 #### Notification Service
 - `GET /health` - Health check
-- `GET /notifications` - Liste des notifications
-- `POST /notifications` - Créer une notification
-- `GET /docs` - Documentation de l'API
+- `GET /notifications` - List notifications
+- `POST /notifications` - Create notification
+- `GET /docs` - API documentation
 
-## 🧪 Test Local avec Docker Compose
+## 🧪 Local Testing with Docker Compose
 
-Pour tester localement sans Kubernetes:
+To test locally without Kubernetes:
 
 ```bash
-# Démarrer tous les services
+# Start all services
 docker-compose up -d
 
-# Voir les logs
+# View logs
 docker-compose logs -f
 
-# Arrêter les services
+# Stop services
 docker-compose down
 ```
 
-## 📚 Concepts Kubernetes Appris
+## 📚 Kubernetes Concepts Learned
 
-Ce projet vous permettra d'apprendre:
+This project will help you learn:
 
-### 1. **Pods et Deployments**
-- Création de pods contenant vos applications
-- Gestion des répliques avec Deployments
-- Configuration des ressources (CPU/Memory)
+### 1. **Pods and Deployments**
+- Creating pods containing your applications
+- Managing replicas with Deployments
+- Resource configuration (CPU/Memory)
 
 ### 2. **Services**
-- Communication entre microservices
-- Exposition des services (ClusterIP, NodePort)
-- Load balancing automatique
+- Inter-microservice communication
+- Service exposure (ClusterIP, NodePort)
+- Automatic load balancing
 
 ### 3. **Health Checks**
-- Liveness probes pour redémarrer les pods défaillants
-- Readiness probes pour contrôler le trafic
+- Liveness probes to restart failed pods
+- Readiness probes to control traffic
 
-### 4. **Variables d'Environnement**
-- Configuration des applications via ConfigMaps
-- Communication entre services
+### 4. **Environment Variables**
+- Application configuration via ConfigMaps
+- Inter-service communication
 
 ### 5. **Namespaces**
-- Isolation des ressources
-- Organisation des déploiements
+- Resource isolation
+- Deployment organization
 
-## 🔧 Commandes Kubernetes Utiles
+## 🔧 Useful Kubernetes Commands
 
-```bash
-# Voir tous les pods
+```powershell
+# View all pods
 kubectl get pods
 
-# Voir les services
+# View services
 kubectl get services
 
-# Voir les détails d'un pod
+# View pod details
 kubectl describe pod <pod-name>
 
-# Voir les logs d'un pod
+# View pod logs
 kubectl logs <pod-name>
 
-# Se connecter à un pod
+# Connect to a pod
 kubectl exec -it <pod-name> -- /bin/sh
 
-# Supprimer un déploiement
-kubectl delete -f k8s/user-service.yaml
+# Delete a deployment
+kubectl delete -f k8s\user-service.yaml
 
-# Appliquer tous les fichiers YAML
-kubectl apply -f k8s/
+# Apply all YAML files
+kubectl apply -f k8s\
 
-# Voir l'utilisation des ressources
+# View resource usage
 kubectl top pods
 ```
 
-## 🐛 Dépannage
+## 🐛 Troubleshooting
 
-### Problèmes Courants
+### Common Issues
 
-1. **Pods en statut "ImagePullBackOff"**
-   ```bash
-   # Vérifier que les images sont construites
-   docker images | grep -E "(user|product|order|notification)-service"
+1. **Pods in "ImagePullBackOff" status**
+   ```powershell
+   # Verify images are built
+   docker images | Select-String "user-service|product-service|order-service|notification-service"
    ```
 
-2. **Services inaccessibles**
-   ```bash
-   # Vérifier que les services sont exposés
+2. **Services inaccessible**
+   ```powershell
+   # Verify services are exposed
    kubectl get services
    
-   # Vérifier les endpoints
+   # Check endpoints
    kubectl get endpoints
    ```
 
-3. **Pods qui redémarrent**
-   ```bash
-   # Voir les logs pour identifier le problème
+3. **Pods restarting**
+   ```powershell
+   # View logs to identify the problem
    kubectl logs <pod-name> --previous
    ```
 
@@ -390,39 +390,39 @@ kubectl describe pod <pod-name>
 # Se connecter à un pod
 kubectl exec -it <pod-name> -- /bin/sh
 
-# Voir les événements du cluster
+# View cluster events
 kubectl get events --sort-by=.metadata.creationTimestamp
 ```
 
-## 📖 Exercices d'Apprentissage
+## 📖 Learning Exercises
 
-### Niveau Débutant
-1. Changer le nombre de répliques d'un service
-2. Modifier les health checks
-3. Ajouter une variable d'environnement
+### Beginner Level
+1. Change the number of replicas for a service
+2. Modify health checks
+3. Add an environment variable
 
-### Niveau Intermédiaire
-1. Créer un ConfigMap pour la configuration
-2. Ajouter des limites de ressources
-3. Créer un Ingress pour l'accès externe
+### Intermediate Level
+1. Create a ConfigMap for configuration
+2. Add resource limits
+3. Create an Ingress for external access
 
-### Niveau Avancé
-1. Implémenter un HorizontalPodAutoscaler
-2. Ajouter des PersistentVolumes
-3. Configurer des NetworkPolicies
+### Advanced Level
+1. Implement a HorizontalPodAutoscaler
+2. Add PersistentVolumes
+3. Configure NetworkPolicies
 
 ## 🤝 Contributing
 
-N'hésitez pas à:
-- Proposer des améliorations
-- Ajouter de nouvelles fonctionnalités
-- Corriger des bugs
-- Améliorer la documentation
+Feel free to:
+- Propose improvements
+- Add new features
+- Fix bugs
+- Improve documentation
 
-## 📄 Licence
+## 📄 License
 
-Ce projet est à des fins éducatives. Utilisez-le librement pour apprendre Kubernetes!
+This project is for educational purposes. Use it freely to learn Kubernetes!
 
 ---
 
-🎉 **Bon apprentissage de Kubernetes !**
+🎉 **Happy Kubernetes Learning!**

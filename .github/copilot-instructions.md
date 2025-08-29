@@ -2,30 +2,30 @@
 - [x] Verify that the copilot-instructions.md file in the .github directory is created.
 
 - [x] Clarify Project Requirements
-	<!-- Projet avec 4 microservices pour apprendre Kubernetes - Spécifié par l'utilisateur -->
+	<!-- Project with 4 microservices for learning Kubernetes - Specified by user -->
 
 - [x] Scaffold the Project
-	<!-- Structure complète créée avec 4 microservices, Dockerfiles, et configurations Kubernetes -->
+	<!-- Complete structure created with 4 microservices, Dockerfiles, and Kubernetes configurations -->
 
 - [x] Customize the Project
-	<!-- Microservices fonctionnels avec APIs complètes et communication inter-services -->
+	<!-- Functional microservices with complete APIs and inter-service communication -->
 
 - [x] Install Required Extensions
-	<!-- Extension Kubernetes déjà installée selon l'utilisateur -->
+	<!-- Kubernetes extension already installed according to user -->
 
 - [x] Compile the Project
-	<!-- Scripts de build et déploiement créés -->
+	<!-- Build and deployment scripts created -->
 
 - [x] Create and Run Task
-	<!-- Scripts build-images et deploy créés pour automatiser les tâches -->
+	<!-- build-images and deploy scripts created to automate tasks -->
 
 - [x] Launch the Project
-	<!-- Scripts de déploiement et instructions complètes fournies -->
+	<!-- Deployment scripts and complete instructions provided -->
 
 - [x] Ensure Documentation is Complete
-	<!-- README complet avec tutoriel et guides d'apprentissage Kubernetes -->
+	<!-- Complete README with tutorial and Kubernetes learning guides -->
 
-## Projet: 4 Microservices pour Apprentissage Kubernetes
+## Project: 4 Microservices for Kubernetes Learning
 - User Service (Node.js/Express)
 - Product Service (Python/Flask) 
 - Order Service (Node.js/Express)
